@@ -7,7 +7,7 @@ public class CFG {
 	
 	private List<ArcoCFG> arcos = new ArrayList<ArcoCFG>();
 	
-	private int idActual = 0;
+	public int idActual = 0;
 	private NodoCFG nodoAnterior = null;
 	public NodoCFG nodoActual = null;
 	public NodoCFG nodoSiguiente = null;
@@ -94,29 +94,20 @@ public class CFG {
 	////JUANNNNNNNN
 
 	
-	//Creo un nodo que es el siguiente
-	public void añadirArcoDirigidoCFG(NodoCFG nodoAnterior, NodoCFG nodoActual)
-	{
-	    nodoSiguiente = new NodoCFG(idActual + 1, "Next Node");
-		ArcoCFG arco = new ArcoCFG(nodoAnterior,nodoActual);
-		ArcoCFG arcoDirigido = new ArcoCFG(nodoActual,nodoSiguiente);
-		nodoActual = nodoSiguiente;
-	    idActual++; 
-
-		
-		
-		// OPCIONAL: Imprimir los nodos cada vez que se crean
-		//System.out.println("NODO: " + nodoActual.imprimir());
-		arcos.add(arco);
-		arcos.add(arcoDirigido);
-
-
+	public void añadirArcoDirigidoCFG(NodoCFG nodoActual, NodoCFG nodoSiguiente) {
+	    nodoSiguiente = new NodoCFG(idActual + 1, "");
+	    ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoActual);
+	    ArcoCFG arcoDirigido = new ArcoCFG(nodoActual, nodoSiguiente);
+	    nodoActual = nodoSiguiente;
+	    idActual++;
+	    arcos.add(arco);
+	    arcos.add(arcoDirigido);
 	}
 	
 	
 	public void añadirNodoFinalThen() {
 		idActual++;
-		NodoCFG nodofinalThen = new NodoCFG(idActual,"End then");
+		NodoCFG nodofinalThen = new NodoCFG(idActual + 1,"End then");
 		ArcoCFG arcofinalThen = new ArcoCFG(nodoAnterior,nodofinalThen);
 
 		arcos.add(arcofinalThen);
@@ -124,11 +115,20 @@ public class CFG {
 	
 	public void añadirNodoFinalElse() {
 		idActual++;
-		NodoCFG nodofinalElse = new NodoCFG(idActual,"End else");
+		NodoCFG nodofinalElse = new NodoCFG(idActual + 1 ,"End else");
 		ArcoCFG arcofinalElse = new ArcoCFG(nodoAnterior,nodofinalElse);
 
 		arcos.add(arcofinalElse);
 	}
+	
+	public void añadirNodoIF() {
+		idActual++;
+		NodoCFG nodoIF = new NodoCFG(idActual,"");
+		ArcoCFG arcoIF = new ArcoCFG(nodoAnterior,nodoIF);
+
+		arcos.add(arcoIF);
+	}
+	
 	
 
 }

@@ -4,7 +4,7 @@ public class NodoCFG {
 	int id;
 	String texto = "NEW NODE";
 	
-	NodoCFG(int id, String texto){
+	public NodoCFG(int id, String texto){
 		this.id=id;
 		this.texto=texto;
 	}

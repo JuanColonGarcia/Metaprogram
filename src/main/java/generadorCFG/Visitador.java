@@ -57,8 +57,7 @@ public class Visitador extends ModifierVisitor<CFG>
 		if(es.hasElseBranch() == false) {
 			cfg.crearNodo(es); 
 			System.out.println(es);
-			NodoCFG nodoFinalThen = cfg.nodoActual; // Guarda una referencia al último nodo del bloque then.
-	        cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente);
+			NodoCFG nodoIF = cfg.nodoActual; // ALAMCENA REFERENCIA DEL NODO ACTUAL
 
 		}
 		else {
@@ -66,15 +65,10 @@ public class Visitador extends ModifierVisitor<CFG>
 			cfg.añadirArcoSecuencialCFG(); // Añade un arco desde el nodo anterior al nodo if.
 			NodoCFG nodoIF = cfg.nodoActual; // Guarda una referencia al nodo if actual.
 			es.getThenStmt().accept(this, cfg); // Visita el bloque then del if y crea nodos correspondientes.
-			
 			NodoCFG nodoFinalThen = cfg.nodoActual; // Guarda una referencia al último nodo del bloque then.
-			cfg.añadirArcoDirigidoCFG(cfg.nodoActual, cfg.nodoSiguiente); //Añade un arco dirigido desde el nodo if al siguiente nodo.
+			cfg.añadirArcoDirigidoCFG(nodoIF, cfg.nodoSiguiente); //Añade un arco dirigido desde el nodo if al siguiente nodo.
 			es.getElseStmt().get().accept(this, cfg); //Visita el bloque else del if y crea nodos correspondientes.
 			cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente); //Añade un arco dirigido desde el último nodo del bloque then al siguiente nodo.
-	        NodoCFG nodoFinalElse = cfg.nodoActual; // Nodo final del Else
-	        // Conectar Then y Else al siguiente nodo
-	        cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente);
-	        cfg.añadirArcoDirigidoCFG(nodoFinalElse, cfg.nodoSiguiente);
 		}
 		
 		return super.visit(es, cfg);
