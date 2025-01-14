@@ -127,7 +127,7 @@ public class CFG {
 		NodoCFG nodofinalElse = new NodoCFG(idActual,"End else");
 		ArcoCFG arcofinalElse = new ArcoCFG(nodoAnterior,nodofinalElse);
 
-		arcos.add(arcofinalThen);
+		arcos.add(arcofinalElse);
 	}
 	
 
