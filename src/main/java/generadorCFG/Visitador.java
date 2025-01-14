@@ -57,18 +57,24 @@ public class Visitador extends ModifierVisitor<CFG>
 		if(es.hasElseBranch() == false) {
 			cfg.crearNodo(es); 
 			System.out.println(es);
-			NodoCFG nodoIF = cfg.nodoActual; // ALAMCENA REFERENCIA DEL NODO ACTUAL
+			NodoCFG nodoFinalThen = cfg.nodoActual; // Guarda una referencia al último nodo del bloque then.
+	        cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente);
 
 		}
 		else {
-			cfg.crearNodo(es); //REPRESENTA NODO IF
-			cfg.añadirArcoSecuencialCFG(); // REPRESENTA ARCO QUE VA DE NODO ANTERIOR AL IF
-			NodoCFG nodoIF = cfg.nodoActual; // ALAMCENA REFERENCIA DEL NODO ACTUAL
-			es.getThenStmt().accept(this, cfg);
-			NodoCFG nodoFinalThen = cfg.nodoActual; // CREA EL ÚLTIMO NODO DEL THEN
-			cfg.añadirArcoDirigidoCFG(cfg.nodoActual, cfg.nodoSiguiente); //AÑADE ARCO DIRIGIDO DESDE EL NODO IF AL NODO SIGUIENTE
-			es.getElseStmt().get().accept(this, cfg); //
-			cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente); //ARCO DEL THEN AL NODO SIGUIENTE
+			cfg.crearNodo(es); //Crea un nodo para la condición del if.
+			cfg.añadirArcoSecuencialCFG(); // Añade un arco desde el nodo anterior al nodo if.
+			NodoCFG nodoIF = cfg.nodoActual; // Guarda una referencia al nodo if actual.
+			es.getThenStmt().accept(this, cfg); // Visita el bloque then del if y crea nodos correspondientes.
+			
+			NodoCFG nodoFinalThen = cfg.nodoActual; // Guarda una referencia al último nodo del bloque then.
+			cfg.añadirArcoDirigidoCFG(cfg.nodoActual, cfg.nodoSiguiente); //Añade un arco dirigido desde el nodo if al siguiente nodo.
+			es.getElseStmt().get().accept(this, cfg); //Visita el bloque else del if y crea nodos correspondientes.
+			cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente); //Añade un arco dirigido desde el último nodo del bloque then al siguiente nodo.
+	        NodoCFG nodoFinalElse = cfg.nodoActual; // Nodo final del Else
+	        // Conectar Then y Else al siguiente nodo
+	        cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente);
+	        cfg.añadirArcoDirigidoCFG(nodoFinalElse, cfg.nodoSiguiente);
 		}
 		
 		return super.visit(es, cfg);
