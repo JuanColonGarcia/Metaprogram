@@ -6,11 +6,11 @@ import java.util.List;
 public class CFG {
 	
 	private List<ArcoCFG> arcos = new ArrayList<ArcoCFG>();
+	private List<NodoCFG> nodosAnteriores = new ArrayList<>();
 	
 	public int idActual = 0;
 	private NodoCFG nodoAnterior = null;
 	public NodoCFG nodoActual = null;
-	public NodoCFG nodoSiguiente = null;
 
 	
 
@@ -43,6 +43,7 @@ public class CFG {
 	private void crearArcos()
 	{
 			añadirArcoSecuencialCFG();
+			
 	}
 
 	
@@ -53,7 +54,6 @@ public class CFG {
 		arcos.add(arco);
 	}	
 	
-		
 	public void añadirNodoFinal() {
 		idActual++;
 		NodoCFG nodofinal = new NodoCFG(idActual,"Stop");
@@ -62,8 +62,51 @@ public class CFG {
 		arcos.add(arcofinal);
 	}	
 	
+	//JUANNNNNNN//
+	
+	// Devuelve el último nodo almacenado en 'nodoAnterior'
+	public List<NodoCFG> getNodoAnterior() {
+		    List<NodoCFG> nodos = new ArrayList<>();
+		        nodos.add(nodoAnterior);
+	    return nodos;
+	}
+	
+	// Establece el nodo anterior con el nodo proporcionado
+	public void setNodoAnterior(NodoCFG nodo) {
+	    this.nodoAnterior = nodo;
+	}
+	
+	public void addListaNodosAnteriores(List<NodoCFG> nodos) {
+		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoActual);
+		arcos.add(arco);
+	}
+	// Crea un arco desde el último nodo al nodo especificado
+	public void crearArcoDesdeUltimoNodo(NodoCFG nodoDestino) {
+		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoDestino);
+		arcos.add(arco);
+	}
 
 
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	// Obtiene el grafo en formato DOT (String)
 	public String obtenerGrafo()
@@ -88,19 +131,4 @@ public class CFG {
 		System.out.println("\nCFG completo:");
 		System.out.println(dotInfo);
 	}
-	
-	// Devuelve el último nodo almacenado en 'nodoAnterior'
-	public List<NodoCFG> getNodoAnterior() {
-		    List<NodoCFG> nodos = new ArrayList<>();
-		        nodos.add(nodoAnterior);
-	    return nodos;
-	}
-	
-	// Establece el nodo anterior con el nodo proporcionado
-	public void setNodoAnterior(NodoCFG nodo) {
-	    this.nodoAnterior = nodo;
-	}
-	
-
-
 }

@@ -74,7 +74,7 @@ public class Visitador extends ModifierVisitor<CFG>
 		if (es.hasElseBlock()) {
 	        es.getElseStmt().ifPresent(stmt -> stmt.accept(this, cfg));
 		}
-		
+		cfg.addListaNodosAnteriores(nodoFinalThen);
 		return super.visit(es, cfg);
 	}
 
@@ -82,9 +82,31 @@ public class Visitador extends ModifierVisitor<CFG>
 	@Override
 	public Visitable visit(WhileStmt es, CFG cfg)
 	{
-		// Deberiamos hacer algo al encontrar un WHILE
 		
-		return super.visit(es, cfg);
+	    // Crear un nodo para el ciclo while con su condición
+	    cfg.crearNodo("While (" + es.getCondition() + ")");
+	    
+	    // Obtener el nodo anterior del CFG
+	    NodoCFG nodoWhile = cfg.getNodoAnterior().get(0);
+	    
+	    // Primero, visitamos el cuerpo del while
+	    es.getBody().accept(this, cfg);
+	    
+	    List <NodoCFG> nodoFinalWhile = new ArrayList<>(cfg.getNodoAnterior());
+
+	    if (!cfg.getNodoAnterior().containsAll(nodoFinalWhile)) {
+	        cfg.addListaNodosAnteriores(nodoFinalWhile);
+	    }
+	    
+		cfg.crearArcoDesdeUltimoNodo(nodoWhile);
+
+	    // Ahora, guardamos el último nodo del camino del while
+	    
+	    // Volvemos al nodo del while
+	    cfg.setNodoAnterior(nodoWhile);
+
+	    
+	    return es;
 	}
 	
 }
