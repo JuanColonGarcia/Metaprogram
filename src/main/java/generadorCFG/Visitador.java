@@ -1,5 +1,8 @@
 package generadorCFG;
 	
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
@@ -53,22 +56,23 @@ public class Visitador extends ModifierVisitor<CFG>
 	@Override
 	public Visitable visit(IfStmt es, CFG cfg)
 	{
-		// Deberiamos hacer algo al encontrar un IF
-		if(es.hasElseBranch() == false) {
-			cfg.crearNodo(es); 
-			System.out.println(es);
-			NodoCFG nodoIF = cfg.nodoActual; // ALAMCENA REFERENCIA DEL NODO ACTUAL
+		//Crea un nodo en el grafo para el if
+		cfg.crearNodo("if (" + es.getCondition() + ")");
+		// Obetenemos la condicion
+		NodoCFG nodoIF = cfg.getNodoAnterior().get(0); 
+		
+		//Se explora el camino del then
+		es.getThenStmt().accept(this, cfg); // Visita el bloque then del if y crea nodos correspondientes.
 
-		}
-		else {
-			cfg.crearNodo(es); //Crea un nodo para la condición del if.
-			cfg.añadirArcoSecuencialCFG(); // Añade un arco desde el nodo anterior al nodo if.
-			NodoCFG nodoIF = cfg.nodoActual; // Guarda una referencia al nodo if actual.
+		//Obtiene ultimo nodo del camino del then
+		List <NodoCFG> nodoFinalThen = new ArrayList<>(cfg.getNodoAnterior());
+			
+		//Volvemos al if
+		cfg.setNodoAnterior(nodoIF);
+		
+		// Se explora la rama del else si la ha
+		if (es.hasElseBlock()) {
 			es.getThenStmt().accept(this, cfg); // Visita el bloque then del if y crea nodos correspondientes.
-			NodoCFG nodoFinalThen = cfg.nodoActual; // Guarda una referencia al último nodo del bloque then.
-			cfg.añadirArcoDirigidoCFG(nodoIF, cfg.nodoSiguiente); //Añade un arco dirigido desde el nodo if al siguiente nodo.
-			es.getElseStmt().get().accept(this, cfg); //Visita el bloque else del if y crea nodos correspondientes.
-			cfg.añadirArcoDirigidoCFG(nodoFinalThen, cfg.nodoSiguiente); //Añade un arco dirigido desde el último nodo del bloque then al siguiente nodo.
 		}
 		
 		return super.visit(es, cfg);

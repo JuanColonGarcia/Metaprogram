@@ -89,46 +89,22 @@ public class CFG {
 		System.out.println(dotInfo);
 	}
 	
-	
-	
-	////JUANNNNNNNN
-
-	
-	public void añadirArcoDirigidoCFG(NodoCFG nodoActual, NodoCFG nodoSiguiente) {
-	    nodoSiguiente = new NodoCFG(idActual + 1, "");
-	    ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoActual);
-	    ArcoCFG arcoDirigido = new ArcoCFG(nodoActual, nodoSiguiente);
-	    nodoActual = nodoSiguiente;
-	    idActual++;
-	    arcos.add(arco);
-	    arcos.add(arcoDirigido);
+	// Devuelve el último nodo almacenado en 'nodoAnterior'
+	public List<NodoCFG> getNodoAnterior() {
+	    List<NodoCFG> nodos = new ArrayList<>();
+	    if (nodoAnterior != null) {
+	        nodos.add(nodoAnterior);
+	    }
+	    return nodos;
 	}
 	
-	
-	public void añadirNodoFinalThen() {
-		idActual++;
-		NodoCFG nodofinalThen = new NodoCFG(idActual + 1,"End then");
-		ArcoCFG arcofinalThen = new ArcoCFG(nodoAnterior,nodofinalThen);
-
-		arcos.add(arcofinalThen);
+	// Establece el nodo anterior con el nodo proporcionado
+	public void setNodoAnterior(NodoCFG nodo) {
+	    this.nodoAnterior = nodo;
 	}
-	
-	public void añadirNodoFinalElse() {
-		idActual++;
-		NodoCFG nodofinalElse = new NodoCFG(idActual + 1 ,"End else");
-		ArcoCFG arcofinalElse = new ArcoCFG(nodoAnterior,nodofinalElse);
 
-		arcos.add(arcofinalElse);
-	}
-	
-	public void añadirNodoIF() {
-		idActual++;
-		NodoCFG nodoIF = new NodoCFG(idActual,"");
-		ArcoCFG arcoIF = new ArcoCFG(nodoAnterior,nodoIF);
 
-		arcos.add(arcoIF);
-	}
-	
 	
 
+	
 }
