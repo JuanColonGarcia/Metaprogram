@@ -57,7 +57,7 @@ public class Visitador extends ModifierVisitor<CFG>
 	public Visitable visit(IfStmt es, CFG cfg)
 	{
 		//Crea un nodo en el grafo para el if
-		cfg.crearNodo("if (" + es.getCondition() + ")");
+		cfg.crearNodo("If (" + es.getCondition() + ")");
 		// Obetenemos la condicion
 		NodoCFG nodoIF = cfg.getNodoAnterior().get(0); 
 		
@@ -72,7 +72,7 @@ public class Visitador extends ModifierVisitor<CFG>
 		
 		// Se explora la rama del else si la ha
 		if (es.hasElseBlock()) {
-			es.getThenStmt().accept(this, cfg); // Visita el bloque then del if y crea nodos correspondientes.
+	        es.getElseStmt().ifPresent(stmt -> stmt.accept(this, cfg));
 		}
 		
 		return super.visit(es, cfg);

@@ -91,10 +91,8 @@ public class CFG {
 	
 	// Devuelve el último nodo almacenado en 'nodoAnterior'
 	public List<NodoCFG> getNodoAnterior() {
-	    List<NodoCFG> nodos = new ArrayList<>();
-	    if (nodoAnterior != null) {
-	        nodos.add(nodoAnterior);
-	    }
+		    List<NodoCFG> nodos = new ArrayList<>();
+		        nodos.add(nodoAnterior);
 	    return nodos;
 	}
 	
@@ -102,9 +100,7 @@ public class CFG {
 	public void setNodoAnterior(NodoCFG nodo) {
 	    this.nodoAnterior = nodo;
 	}
-
-
 	
 
-	
+
 }
