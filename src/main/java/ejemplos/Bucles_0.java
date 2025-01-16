@@ -6,11 +6,16 @@ public class Bucles_0 {
 	{
 		int x=1;
 		x=1;
-		do{
-			System.out.print(" "+x);
-			x++;
-		}
-		while (x<=10);
-		System.out.println();
-	}
+			if (x==1)
+			{
+				x=2;
+				x=3;
+
+			}
+			else
+			{
+				x=4;
+				x=5;
+			}
+			}
 }

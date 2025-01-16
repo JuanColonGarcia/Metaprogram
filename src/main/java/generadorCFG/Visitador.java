@@ -59,30 +59,38 @@ public class Visitador extends ModifierVisitor<CFG>
 	{
 		//Crea un nodo en el grafo para el if
 		cfg.crearNodo("If (" + es.getCondition() + ")");
-		// Obetenemos la condicion
+		
+		// Se obtiene la condicion
 		NodoCFG nodoIF = cfg.getNodoAnterior().get(0); 
 		
 		//Se explora el camino del then
-		// Visita el bloque then del if y crea nodos correspondientes.
 		es.getThenStmt().accept(this, cfg); 
 
 		//Obtiene ultimo nodo del camino del then
-		List <NodoCFG> nodoFinalThen = new ArrayList<>(cfg.getNodoAnterior());
+		List <NodoCFG> nodoFinalUnificacion = new ArrayList<>(cfg.getNodoAnterior());
 		
-		//Volvemos al if
-
-		// Se explora la rama del else si la ha
+	    if (!cfg.getNodoAnterior().containsAll(nodoFinalUnificacion)) {
+	        cfg.añadirListaNodosAnteriores(nodoFinalUnificacion);
+	    }
+		// Se explora la rama del else si la hay
 		if (es.hasElseBlock()) {
+	        // Reinicia la lista de nodos anteriores para iniciar desde el nodo "if"
 			cfg.nodosAnteriores.clear();
+			//Arco que une el if con el else
 			cfg.nodosAnteriores.add(nodoIF);
-	        es.getElseStmt().ifPresent(stmt -> stmt.accept(this, cfg));
-			nodoFinalThen.addAll(cfg.nodosAnteriores);
+			
+	        // Visita el bloque "else" y crea los nodos correspondientes
+			es.getElseStmt().get().accept(this, cfg);
+	        
+	        // Combina los nodos finales de las rama "else" con la salida
+	        nodoFinalUnificacion.addAll(cfg.nodosAnteriores);
 		}else {
-			nodoFinalThen.add(nodoIF);
+	        // Si no hay rama "else", conecta el nodo "if" directamente a los nodos finales del "then"
+			nodoFinalUnificacion.add(nodoIF);
 		}
 		
-		
-		cfg.nodosAnteriores = nodoFinalThen;
+        // Combina los nodos finales de las rama "then" con la salida
+		cfg.nodosAnteriores = nodoFinalUnificacion;
 		return es;
 
 	}
@@ -99,24 +107,26 @@ public class Visitador extends ModifierVisitor<CFG>
 	    cfg.crearNodo("While (" + es.getCondition() + ")");
 	    
 	    // Obtener el nodo anterior del CFG
-	    NodoCFG nodoWhile = cfg.getNodoAnterior().get(0);
+	    NodoCFG nodoInicialWhile = cfg.getNodoAnterior().get(0);
 	    
 	    // Primero, visitamos el cuerpo del while
 	    es.getBody().accept(this, cfg);
 	    
+		//Obtiene ultimo nodo del camino del while
 	    List <NodoCFG> nodoFinalWhile = new ArrayList<>(cfg.getNodoAnterior());
-	    
-	    cfg.nodosAnteriores.clear();
+
 	    if (!cfg.getNodoAnterior().containsAll(nodoFinalWhile)) {
-	        cfg.addListaNodosAnteriores(nodoFinalWhile);
+	        cfg.añadirListaNodosAnteriores(nodoFinalWhile);
 	    }
 	    
-		cfg.crearArcoDesdeUltimoNodo(nodoWhile);
+	    //crea el arco desde el último nodo hasta el nodoWhile
+		cfg.crearArcoDesdeUltimoNodo(nodoInicialWhile);
 
-	    // Ahora, guardamos el último nodo del camino del while
-	    
-	    // Volvemos al nodo del while
-	    cfg.setNodoAnterior(nodoWhile);
+        // Reinicia la lista de nodos anteriores para iniciar desde el nodo "while"
+	    cfg.nodosAnteriores.clear();
+
+	    // Une el while con la salida del while
+	    cfg.setNodoAnterior(nodoInicialWhile);
 
 	    
 	    return es;
@@ -125,20 +135,26 @@ public class Visitador extends ModifierVisitor<CFG>
 	@Override
 	public Visitable visit(DoStmt es, CFG cfg)
 	{
+	    // Crear un nodo indicar el inicio del do
 		cfg.crearNodo("Do");
+		
+	    // Obtener el nodo anterior del CFG 
 		NodoCFG nodoDoWhile = cfg.getNodoActual();
 
+	    // Primero, visitamos el cuerpo del Dowhile
  	    es.getBody().accept(this, cfg);
 	    
-	    List <NodoCFG> nodoFinalWhile = new ArrayList<>(cfg.getNodoAnterior());
+		//Obtiene ultimo nodo del camino del Dowhile
+	    List <NodoCFG> nodoFinalDoWhile = new ArrayList<>(cfg.getNodoAnterior());
 	    
-	    if (!cfg.getNodoAnterior().containsAll(nodoFinalWhile)) {
-	        cfg.addListaNodosAnteriores(nodoFinalWhile);
+	    if (!cfg.getNodoAnterior().containsAll(nodoFinalDoWhile)) {
+	        cfg.añadirListaNodosAnteriores(nodoFinalDoWhile);
 	    }
 	    
-
+	    // Crear un nodo para el ciclo Dowhile con su condición
 		cfg.crearNodo("While(" + es.getCondition()+ ")");
 
+	    //crea el arco desde el final del Dowhile al incio
 		cfg.crearArcoDesdePrimerNodo(nodoDoWhile);
 
 		return es;
@@ -147,26 +163,34 @@ public class Visitador extends ModifierVisitor<CFG>
 	
 	public Visitable visit(ForStmt es, CFG cfg) {
 		
+		//Crear un nodo para la inicializacion del for
 		cfg.crearNodo("(For) " + es.getInitialization().get(0).toString());
-
+		//Crear un nodo para condicion del for
 		cfg.crearNodo("(For) "+ es.getCompare().get().toString());
 
-	    NodoCFG nodoFor = cfg.getNodoAnterior().get(0);
-	    
+	    // Obtener el nodo anterior del for 
+	    NodoCFG nodoInicialFor = cfg.getNodoAnterior().get(0);
+
+	    // Primero, visitamos el cuerpo del for
 	    es.getBody().accept(this, cfg);
 
+		//Obtiene ultimo nodo del camino del For
 	    List <NodoCFG> nodoFinalFor = new ArrayList<>(cfg.getNodoAnterior());
 
 	    if (!cfg.getNodoAnterior().containsAll(nodoFinalFor)) {
-	        cfg.addListaNodosAnteriores(nodoFinalFor);
+	        cfg.añadirListaNodosAnteriores(nodoFinalFor);
 	    }
-
+	    //Genera un nodo con la actualización del for 
 		cfg.crearNodo("(For) " + es.getUpdate().get(0).toString());	
 
+        // Reinicia la lista de nodos anteriores para iniciar desde el nodo "while"
 	    cfg.nodosAnteriores.clear();
 
-		cfg.crearArcoDesdePrimerNodo(nodoFor);
-	    cfg.setNodoAnterior(nodoFor);
+	    //crea el arco desde el final del for al inicio
+		cfg.crearArcoDesdePrimerNodo(nodoInicialFor);
+		
+		//Une el for con el resto del grafo
+	    cfg.setNodoAnterior(nodoInicialFor);
 
 
 		return es;
