@@ -24,29 +24,30 @@ public class CFG {
 	public void crearNodo(Object objeto)
 	{
 		idActual++; //Contador de nodos, indicando el ID actual
+		
 		//Crea un nuevo nodo usando el ID actual
 		nodoActual = new NodoCFG(idActual,quitarComillas(objeto.toString()));
-		
-		// OPCIONAL: Imprimir los nodos cada vez que se crean
-		//System.out.println("NODO: " + nodoActual.imprimir());
-		
 		crearArcos();
 		
 		//Limpia lista de nodos anteriores
 		nodosAnteriores.clear();
+		
 		//Se añade el nodo recien creado
 		nodosAnteriores.add(nodoActual);
+		
 		//Actualiza la referencia del nodo anterior
 		nodoAnterior = nodoActual;		
 	}
 	
 	
 	public void añadirNodoFinal() {
-		idActual++;
-		NodoCFG nodofinal = new NodoCFG(idActual,"Stop");
-		ArcoCFG arcofinal = new ArcoCFG(nodoAnterior,nodofinal);
-
-		arcos.add(arcofinal);
+	    idActual++;
+	    NodoCFG nodofinal = new NodoCFG(idActual, "Stop");
+	    //Recorre sobre todos los nodos en la lista nodosAnteriores
+	    for (NodoCFG nodo : nodosAnteriores) {
+	        ArcoCFG arcofinal = new ArcoCFG(nodo, nodofinal); //Crea un arco (arcofinal) desde cada nodo en nodosAnteriores al nodo final (nodofinal).
+	        arcos.add(arcofinal);
+	    }
 	}
 			
 	// Sustituye " por \" en un string: Sirve para eliminar comillas.
@@ -69,24 +70,30 @@ public class CFG {
 	{	
 		//Recorre cada nodo en la lista nodosAnteriores.
 	    for (NodoCFG nodo : nodosAnteriores) {
+	    	
 	    	//Genera arco nodoAnteriores --> nodoActual
 			ArcoCFG arco = new ArcoCFG(nodo ,nodoActual);
 			arcos.add(arco);
+			
 		}
 	}	
 	
 	// Crea un arco desde el último nodo al nodo especificado
 	public void crearArcoDesdeUltimoNodo(NodoCFG nodoDestino) {
+		
     	//Genera arco nodoAnterior --> nodoDestino
 		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoDestino);
 		arcos.add(arco);
+		
 	}
 	
 	// Crea un arco desde el último nodo al nodo especificado
 	public void crearArcoDesdePrimerNodo(NodoCFG nodoDestino) {
+		
     	//Genera arco nodoActual --> nodoDestino
 		ArcoCFG arco = new ArcoCFG(nodoActual, nodoDestino);
 		arcos.add(arco);
+		
 	}
 	
 ////////////////////////////METODOS PARA GESTION DE NODOS////////////////////////////////////////////	

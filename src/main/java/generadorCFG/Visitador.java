@@ -72,10 +72,13 @@ public class Visitador extends ModifierVisitor<CFG>
 	    if (!cfg.getNodoAnterior().containsAll(nodoFinalUnificacion)) {
 	        cfg.añadirListaNodosAnteriores(nodoFinalUnificacion);
 	    }
+	    
 		// Se explora la rama del else si la hay
 		if (es.hasElseBlock()) {
+			
 	        // Reinicia la lista de nodos anteriores para iniciar desde el nodo "if"
 			cfg.nodosAnteriores.clear();
+			
 			//Arco que une el if con el else
 			cfg.nodosAnteriores.add(nodoIF);
 			
@@ -84,13 +87,16 @@ public class Visitador extends ModifierVisitor<CFG>
 	        
 	        // Combina los nodos finales de las rama "else" con la salida
 	        nodoFinalUnificacion.addAll(cfg.nodosAnteriores);
+	        
 		}else {
+			
 	        // Si no hay rama "else", conecta el nodo "if" directamente a los nodos finales del "then"
 			nodoFinalUnificacion.add(nodoIF);
 		}
 		
         // Combina los nodos finales de las rama "then" con la salida
 		cfg.nodosAnteriores = nodoFinalUnificacion;
+		
 		return es;
 
 	}
@@ -165,6 +171,7 @@ public class Visitador extends ModifierVisitor<CFG>
 		
 		//Crear un nodo para la inicializacion del for
 		cfg.crearNodo("(For) " + es.getInitialization().get(0).toString());
+		
 		//Crear un nodo para condicion del for
 		cfg.crearNodo("(For) "+ es.getCompare().get().toString());
 
@@ -180,6 +187,7 @@ public class Visitador extends ModifierVisitor<CFG>
 	    if (!cfg.getNodoAnterior().containsAll(nodoFinalFor)) {
 	        cfg.añadirListaNodosAnteriores(nodoFinalFor);
 	    }
+	    
 	    //Genera un nodo con la actualización del for 
 		cfg.crearNodo("(For) " + es.getUpdate().get(0).toString());	
 
@@ -192,12 +200,8 @@ public class Visitador extends ModifierVisitor<CFG>
 		//Une el for con el resto del grafo
 	    cfg.setNodoAnterior(nodoInicialFor);
 
-
 		return es;
-
 	}
-	
-
 	
 	
 }
