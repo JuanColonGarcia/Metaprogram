@@ -63,22 +63,30 @@ public class Visitador extends ModifierVisitor<CFG>
 		NodoCFG nodoIF = cfg.getNodoAnterior().get(0); 
 		
 		//Se explora el camino del then
-		es.getThenStmt().accept(this, cfg); // Visita el bloque then del if y crea nodos correspondientes.
+		// Visita el bloque then del if y crea nodos correspondientes.
+		es.getThenStmt().accept(this, cfg); 
 
 		//Obtiene ultimo nodo del camino del then
 		List <NodoCFG> nodoFinalThen = new ArrayList<>(cfg.getNodoAnterior());
-			
+		
 		//Volvemos al if
 		cfg.setNodoAnterior(nodoIF);
 		
-		// Se explora la rama del else si la ha
+
+		// Se explora la rama del else si la hay
 		if (es.hasElseBlock()) {
 	        es.getElseStmt().ifPresent(stmt -> stmt.accept(this, cfg));
 		}
-		cfg.addListaNodosAnteriores(nodoFinalThen);
+
+		cfg.crearArcoDesdeUltimoNodo2(nodoFinalThen);
 		return es;
+
 	}
 
+	
+	
+	
+	
 	// Visitador de expresiones WHILE	
 	@Override
 	public Visitable visit(WhileStmt es, CFG cfg)
@@ -113,9 +121,10 @@ public class Visitador extends ModifierVisitor<CFG>
 	@Override
 	public Visitable visit(DoStmt es, CFG cfg)
 	{
-	    NodoCFG nodoDoWhile = cfg.getNodoAnterior().get(0);
+		
+	    NodoCFG nodoDoWhile = cfg.getNodoActual();
 
-	    es.getBody().accept(this, cfg);
+ 	    es.getBody().accept(this, cfg);
 	    
 	    List <NodoCFG> nodoFinalWhile = new ArrayList<>(cfg.getNodoAnterior());
 	    

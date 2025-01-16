@@ -62,6 +62,8 @@ public class CFG {
 		arcos.add(arcofinal);
 	}	
 	
+
+	
 	//JUANNNNNNN//
 	
 	// Devuelve el último nodo almacenado en 'nodoAnterior'
@@ -84,6 +86,9 @@ public class CFG {
 	        }
 	    }
 	}
+	
+	
+	
 	// Crea un arco desde el último nodo al nodo especificado
 	public void crearArcoDesdeUltimoNodo(NodoCFG nodoDestino) {
 		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoDestino);
@@ -92,10 +97,23 @@ public class CFG {
 	
 	// Crea un arco desde el último nodo al nodo especificado
 	public void crearArcoDesdePrimerNodo(NodoCFG nodoDestino) {
-		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoDestino);
+		ArcoCFG arco = new ArcoCFG(nodoActual, nodoDestino);
 		arcos.add(arco);
 	}
 
+	public NodoCFG getNodoActual() {
+		return nodoActual;
+	}
+	
+	
+	// Crea un arco desde el último nodo a cada nodo especificado en la lista
+	public void crearArcoDesdeUltimoNodo2(List<NodoCFG> nodosDestino) {
+	    for (NodoCFG nodoDestino : nodosDestino) {
+	        ArcoCFG arco = new ArcoCFG(nodoDestino, nodoActual);
+	        arcos.add(arco);
+	    }
+	}
+	
 	
 	
 	
@@ -137,5 +155,10 @@ public class CFG {
 		}
 		System.out.println("\nCFG completo:");
 		System.out.println(dotInfo);
+		
 	}
+	
+
+
+
 }

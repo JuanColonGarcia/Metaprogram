@@ -28,7 +28,7 @@ public class GeneradorCFG {
         
    	// Ruta del fichero con el programa del que vamos a generar el CFG
 		String ruta = "src/main/java/ejemplos/";
-		String fichero = "Bucles_0";
+		String fichero = "Test_3";
     			
      	// JavaParser has a minimal logging class that normally logs nothing.
         // Let's ask it to write to standard out:
