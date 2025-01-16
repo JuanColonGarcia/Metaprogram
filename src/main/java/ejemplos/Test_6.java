@@ -17,5 +17,16 @@ public class Test_6 {
 			x=5;
 		}
 		x=6;
+		while(x>1){
+			x++;
+			if(x==2) {
+				x=2;
+				x=3;
+			}
+			else {
+				x=6;
+			}
+
+		}
 	}
 }

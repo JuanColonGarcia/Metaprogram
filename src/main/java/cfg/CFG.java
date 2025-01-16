@@ -5,11 +5,11 @@ import java.util.List;
 
 public class CFG {
 	
-	private List<ArcoCFG> arcos = new ArrayList<ArcoCFG>();
-	private List<NodoCFG> nodosAnteriores = new ArrayList<>();
+	public List<ArcoCFG> arcos = new ArrayList<ArcoCFG>();
+	public List<NodoCFG> nodosAnteriores = new ArrayList<>();
 	
 	public int idActual = 0;
-	private NodoCFG nodoAnterior = null;
+	public NodoCFG nodoAnterior = null;
 	public NodoCFG nodoActual = null;
 
 	
@@ -29,6 +29,8 @@ public class CFG {
 		// OPCIONAL: Imprimir los nodos cada vez que se crean
 		//System.out.println("NODO: " + nodoActual.imprimir());
 		crearArcos();
+		nodosAnteriores.clear();
+		nodosAnteriores.add(nodoActual);
 		nodoAnterior = nodoActual;
 		
 	}
@@ -50,8 +52,10 @@ public class CFG {
 	// Añade un arco desde el último nodo hasta el nodo actual (se le pasa como parametro)
 	public void añadirArcoSecuencialCFG()
 	{	
-		ArcoCFG arco = new ArcoCFG(nodoAnterior,nodoActual);
-		arcos.add(arco);
+	    for (NodoCFG nodo : nodosAnteriores) {
+			ArcoCFG arco = new ArcoCFG(nodo ,nodoActual);
+			arcos.add(arco);
+		}
 	}	
 	
 	public void añadirNodoFinal() {
@@ -77,7 +81,15 @@ public class CFG {
 	// Establece el nodo anterior con el nodo proporcionado
 	public void setNodoAnterior(NodoCFG nodo) {
 	    this.nodoAnterior = nodo;
+		this.nodosAnteriores.add(nodo);
+
 	}
+	
+	// Establece el nodo anterior con el nodo proporcionado
+	public void añadirNodoALista(NodoCFG nodo) {
+        this.nodosAnteriores.add(nodo);
+	}
+	
 	
 	public void addListaNodosAnteriores(List<NodoCFG> nodos) {
 	    for (NodoCFG nodo : nodos) {
@@ -113,10 +125,7 @@ public class CFG {
 	        arcos.add(arco);
 	    }
 	}
-	
-	
-	
-	
+		
 	
 	
 	
