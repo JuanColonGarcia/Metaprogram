@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.stmt.DoStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
 import com.github.javaparser.ast.stmt.WhileStmt;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
@@ -20,7 +22,6 @@ public class Visitador extends ModifierVisitor<CFG>
 	/********************************************************/
 	/********************** Atributos ***********************/
 	/********************************************************/
-
 	
 	/********************************************************/
 	/*********************** Metodos ************************/
@@ -75,7 +76,7 @@ public class Visitador extends ModifierVisitor<CFG>
 	        es.getElseStmt().ifPresent(stmt -> stmt.accept(this, cfg));
 		}
 		cfg.addListaNodosAnteriores(nodoFinalThen);
-		return super.visit(es, cfg);
+		return es;
 	}
 
 	// Visitador de expresiones WHILE	
@@ -108,5 +109,56 @@ public class Visitador extends ModifierVisitor<CFG>
 	    
 	    return es;
 	}
+	
+	@Override
+	public Visitable visit(DoStmt es, CFG cfg)
+	{
+	    NodoCFG nodoDoWhile = cfg.getNodoAnterior().get(0);
+
+	    es.getBody().accept(this, cfg);
+	    
+	    List <NodoCFG> nodoFinalWhile = new ArrayList<>(cfg.getNodoAnterior());
+	    
+	    if (!cfg.getNodoAnterior().containsAll(nodoFinalWhile)) {
+	        cfg.addListaNodosAnteriores(nodoFinalWhile);
+	    }
+	    
+
+		cfg.crearNodo("Do While(" + es.getCondition()+ ")");
+
+		cfg.crearArcoDesdePrimerNodo(nodoDoWhile);
+
+		return es;
+
+	}
+	
+	public Visitable visit(ForStmt es, CFG cfg) {
+		
+		cfg.crearNodo("(For) " + es.getInitialization().get(0).toString());
+		
+		cfg.crearNodo("(For) "+ es.getCompare().get().toString());
+		
+	    NodoCFG nodoFor = cfg.getNodoAnterior().get(0);
+	    
+	    es.getBody().accept(this, cfg);
+
+	    List <NodoCFG> nodoFinalFor = new ArrayList<>(cfg.getNodoAnterior());
+
+	    if (!cfg.getNodoAnterior().containsAll(nodoFinalFor)) {
+	        cfg.addListaNodosAnteriores(nodoFinalFor);
+	    }
+	    
+		cfg.crearNodo("(For) " + es.getUpdate().get(0).toString());	
+
+		cfg.crearArcoDesdePrimerNodo(nodoFor);
+	    cfg.setNodoAnterior(nodoFor);
+
+
+		return es;
+
+	}
+	
+
+	
 	
 }

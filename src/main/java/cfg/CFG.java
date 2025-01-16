@@ -70,6 +70,7 @@ public class CFG {
 		        nodos.add(nodoAnterior);
 	    return nodos;
 	}
+
 	
 	// Establece el nodo anterior con el nodo proporcionado
 	public void setNodoAnterior(NodoCFG nodo) {
@@ -77,18 +78,24 @@ public class CFG {
 	}
 	
 	public void addListaNodosAnteriores(List<NodoCFG> nodos) {
-		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoActual);
-		arcos.add(arco);
+	    for (NodoCFG nodo : nodos) {
+	        if (!this.nodosAnteriores.contains(nodo)) { // Verifica si el nodo ya existe
+	            this.nodosAnteriores.add(nodo);
+	        }
+	    }
 	}
 	// Crea un arco desde el último nodo al nodo especificado
 	public void crearArcoDesdeUltimoNodo(NodoCFG nodoDestino) {
 		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoDestino);
 		arcos.add(arco);
 	}
-
-
-
 	
+	// Crea un arco desde el último nodo al nodo especificado
+	public void crearArcoDesdePrimerNodo(NodoCFG nodoDestino) {
+		ArcoCFG arco = new ArcoCFG(nodoAnterior, nodoDestino);
+		arcos.add(arco);
+	}
+
 	
 	
 	
